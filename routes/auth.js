@@ -6,31 +6,40 @@ const jwt = require('jsonwebtoken');
 
 //gbhbuhbyugbhhhhhhhhhhhhhhhhhhhhh
 
-authRouter.post('/api/signup', async(req,res) => {
+authRouter.post('/api/signup', async (req, res) => {
     try {
-        const {fullName, email, password} = req.body;
+        const { fullName, email, password } = req.body;
 
         if (!fullName || !email || !password) {
             return res.status(400).json({ msg: "Please enter all fields" });
         }
 
-        const existingEmail = await User.findOne({email});
-
-        if(existingEmail) {
-            return res.status(400).json({msg:"user with same email already exists"});
-        } else {
-            //Generate a salt with a cost factor of 10
-        const salt = await bcrypt.genSalt(10);
-            //hash the password using the generated salt
-        const hashedPassword = await bcrypt.hash(password, salt);
-            let user = new User({fullName, email, password: hashedPassword});
-            user = await user.save();
-            res.json({user});
+        const existingEmail = await User.findOne({ email });
+        if (existingEmail) {
+            return res.status(400).json({ msg: "User with the same email already exists" });
         }
-    } catch(error) {
-        res.status(500).json({error: error.message});
+
+        // Hash the password
+        const salt = await bcrypt.genSalt(10);
+        const hashedPassword = await bcrypt.hash(password, salt);
+
+        // Save the user
+        let user = new User({ fullName, email, password: hashedPassword });
+        user = await user.save();
+
+        // Generate JWT token
+        const token = jwt.sign({ id: user._id }, "passwordKey");
+
+        // Exclude password from response
+        const { password: _, ...userWithoutPassword } = user._doc;
+
+        // Respond with token and user data (without password)
+        res.json({ token, ...userWithoutPassword });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
     }
 });
+
 
 //signin api end point
 
