@@ -53,4 +53,35 @@ callRouter.post('/saveCallLogs', async (req, res) => {
     }
 });
 
+// Get route to fetch call logs for a user
+callRouter.get('/getCallLogs/:userId', async (req, res) => {
+    const { userId } = req.params;
+
+    try {
+        // Find the user's call logs by userId
+        const userr = await Calls.findOne({ userId: userId });
+
+        if (!userr) {
+            return res.status(404).json({ message: "No call logs found for this userId" });
+        }
+
+        res.status(200).json({
+            message: "Call logs fetched successfully",
+            callLogs: userr.callLogs,
+        });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: "Server error while fetching call logs" });
+    }
+});
+
 module.exports = callRouter;
+
+
+
+
+
+
+
+
+

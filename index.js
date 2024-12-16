@@ -2,6 +2,7 @@ const express = require('express');
 const mongoose = require("mongoose");
 const helloRoute = require('./routes/hello');
 const authRouter = require('./routes/auth');
+const appUsageRouter = require('./routes/AppUsage'); // Import the appUsage route
 const PORT = 3000;
 const callLogsRouter = require('./routes/callLogs'); // Import the callLogs route
 
@@ -12,6 +13,7 @@ app.use(helloRoute);
 app.use(express.json());
 app.use(authRouter);
 app.use('/api', callLogsRouter); 
+app.use('/api', appUsageRouter); // Use the appUsageRouter
 
 mongoose.connect(DB).then(()=>{
     console.log('mongoDB connected');
