@@ -7,6 +7,7 @@ const authRouter = require('./routes/auth');
 const appUsageRouter = require('./routes/AppUsage'); // Import the appUsage route
 const locationRouter = require('./routes/location')
 const callLogsRouter = require('./routes/callLogs'); // Import the callLogs route
+const authNewRouter = require('./routes/authNew');  // Update this line
 const { setupWebSocketServer } = require('./routes/websocket'); // Import the WebSocket logic
 
 
@@ -20,6 +21,8 @@ app.use(authRouter);
 app.use('/api', callLogsRouter); 
 app.use('/api', appUsageRouter); // Use the appUsageRouter
 app.use('/api', locationRouter);
+app.use(authNewRouter);  // Replace authRouter with authNewRouter
+
 
 // HTTP server setup
 const server = http.createServer(app);
