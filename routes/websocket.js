@@ -22,7 +22,7 @@ const setupWebSocketServer = (server) => {
                     // If it's a child, store the location data
                     if (latitude && longitude) {
                         childLocations.set(userid, { latitude, longitude });
-                        console.log(`Child location received: ${userid} - ${latitude}, ${longitude}`);
+                        console.log(`Child location received: ${userid} = ${latitude}, ${longitude}`);
                     }
                 } else if (type === 'parent') {
                     // If it's a parent, send the child's location to the parent

@@ -62,6 +62,7 @@ authNewRouter.post('/login', async (req, res) => {
             message: 'Login successful',
             token,
             userId: userNew.userId,
+            role: userNew.role, // Include role in the response
         });
     } catch (err) {
         console.error(err);
