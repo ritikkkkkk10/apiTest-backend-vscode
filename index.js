@@ -14,7 +14,7 @@ const { setupWebSocketServer } = require('./routes/websocket'); // Import the We
 const PORT = 3000;
 const app = express();
 
-const DB = "
+const DB = 
 app.use(helloRoute);
 app.use(express.json());
 app.use(authRouter);

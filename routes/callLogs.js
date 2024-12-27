@@ -54,8 +54,8 @@ callRouter.post('/saveCallLogs', async (req, res) => {
 });
 
 // Get route to fetch call logs for a user
-callRouter.get('/getCallLogs/:userId', async (req, res) => {
-    const { userId } = req.params;
+callRouter.get('/getCallLogs/:userId/:date', async (req, res) => {
+    const { userId, date } = req.params;
 
     try {
         // Find the user's call logs by userId
@@ -65,9 +65,16 @@ callRouter.get('/getCallLogs/:userId', async (req, res) => {
             return res.status(404).json({ message: "No call logs found for this userId" });
         }
 
+        // Filter call logs for the specific date
+        const filteredLogs = userr.callLogs.filter(log => log.callDate.startsWith(date));
+
+        if (filteredLogs.length === 0) {
+            return res.status(404).json({ message: "No call logs found for the selected date" });
+        }
+
         res.status(200).json({
             message: "Call logs fetched successfully",
-            callLogs: userr.callLogs,
+            callLogs: filteredLogs,
         });
     } catch (error) {
         console.error(error);
