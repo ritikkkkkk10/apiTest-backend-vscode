@@ -42,4 +42,27 @@ router.post("/location", async (req, res) => {
     }
 });
 
+router.get("/location", async(req, res) => {
+    const { userId, date, startTime, limit = 10, offset = 0 } = req.query;
+
+    try {
+        const userLocation = await Location.findOne({ userId});
+
+        if(userLocation) {
+            const locationsForDate = userLocation.locationByDate.get(date);
+            if(locationsForDate) {
+                const filteredLocations = locationsForDate
+                .filter(loc => new Date(loc.timestamp) > new Date(startTime))
+                .slice(Number(offset), Number(offset) + Number(limit));
+
+                return res.status(200).json(filteredLocations);
+            }
+        }
+        res.status(404).json({ message: "No locations found for the given date and time"});
+    } catch (err) {
+        console.error("Error fetching locations:", err);
+        res.status(500).json({message: "Failed to fetch locations"});
+    }
+});
+
 module.exports = router;
