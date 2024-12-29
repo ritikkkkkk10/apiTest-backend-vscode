@@ -1,6 +1,7 @@
 const express = require('express');
 const mongoose = require("mongoose");
 const http = require('http'); // Required for WebSocket
+const dotenv = require('dotenv'); // Import dotenv
 
 const helloRoute = require('./routes/hello');
 const authRouter = require('./routes/auth');
@@ -10,12 +11,14 @@ const callLogsRouter = require('./routes/callLogs'); // Import the callLogs rout
 const authNewRouter = require('./routes/authNew');  // Update this line
 const { setupWebSocketServer } = require('./routes/websocket'); // Import the WebSocket logic
 
+// Load environment variables from .env file
+dotenv.config();
 
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
+const DB = process.env.DB;
+
 const app = express();
 
-const DB = "mongodb+srv://sahilsumaniitb1:wWIoBeWemjbYckAm@cluster0.3zbv6.mongodb.net/"
-//mongodb+srv://ritzreigns002:Prajapati%40002@cluster0.i52by.mongodb.net/
 app.use(helloRoute);
 app.use(express.json());
 app.use(authRouter);
