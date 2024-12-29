@@ -38,6 +38,6 @@ mongoose.connect(DB).then(()=>{
     console.log('mongoDB connected');
 })
 
-server.listen(PORT, "0.0.0.0", function() {
+server.listen(process.env.PORT || 3000, "0.0.0.0", function() {
     console.log(`server is running on port ${PORT}`)
 });
