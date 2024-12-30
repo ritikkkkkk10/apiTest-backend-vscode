@@ -21,8 +21,18 @@ callRouter.post('/saveCallLogs', async (req, res) => {
 
         // If a record exists, check for the last saved timestamp
         const lastSavedTime = userr.calllogssavingstime
-            ? new Date(userr.calllogssavingstime).getTime()
+            ? new Date(userr.calllogssavingstime)
             : null;
+
+            if (lastSavedTime) {
+                // Convert to IST (UTC +5:30) by using toLocaleString
+                const istTime = lastSavedTime.toLocaleString('en-IN', {
+                    timeZone: 'Asia/Kolkata', // Set the time zone to Indian Standard Time
+                });
+    
+                // Log the converted IST time
+                console.log("Last Saved Time (IST):", istTime);
+            }
 
         // Filter the new call logs by the timestamp
         const newCallLogs = callLogs.filter(log => {
