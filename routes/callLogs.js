@@ -21,20 +21,13 @@ callRouter.post('/saveCallLogs', async (req, res) => {
 
         // If a record exists, check for the last saved timestamp
         const lastSavedTime = userr.calllogssavingstime
-            ? new Date(userr.calllogssavingstime)
+            ? new Date(userr.calllogssavingstime).getTime()
             : null;
 
-        // Log the UTC last saved time
-        if (lastSavedTime) {
-            console.log("Last Saved Time (UTC):", lastSavedTime.toISOString());
-        }
-
-        // Filter the new call logs by the timestamp in UTC
+        // Filter the new call logs by the timestamp
         const newCallLogs = callLogs.filter(log => {
-            const logTime = new Date(log.callDate).getTime(); // Convert callDate to timestamp (UTC)
-            const lastSavedTimeUTC = lastSavedTime ? lastSavedTime.getTime() : 0;
-            // Compare the log time (UTC) with lastSavedTime (UTC)
-            return logTime > lastSavedTimeUTC;
+            const logTime = new Date(log.callDate).getTime(); // Convert callDate to timestamp
+            return lastSavedTime ? logTime > lastSavedTime : true;
         });
 
         // Add only the new logs to the database
