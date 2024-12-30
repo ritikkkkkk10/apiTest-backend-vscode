@@ -4,7 +4,7 @@ const Calls = require('../models/calls'); // Import the Calls model
 
 // Post route to save logs
 callRouter.post('/saveCallLogs', async (req, res) => {
-    const { userId, callLogs, latestCallDate } = req.body;
+    const { userId, callLogs } = req.body;
 
     try {
         let userr = await Calls.findOne({ userId: userId });
@@ -13,7 +13,7 @@ callRouter.post('/saveCallLogs', async (req, res) => {
             userr = new Calls({
                 userId: userId,
                 callLogs: callLogs,
-                calllogssavingstime: latestCallDate || new Date().toISOString(),
+                calllogssavingstime: new Date().toISOString(),
             });
             await userr.save();
             return res.status(201).json({ message: "User created and call logs saved successfully" });
@@ -26,14 +26,14 @@ callRouter.post('/saveCallLogs', async (req, res) => {
 
         // Filter the new call logs by the timestamp
         const newCallLogs = callLogs.filter(log => {
-            const logTime = log.callDate; // Convert callDate to timestamp
-            return lastSavedTime ? new Date(logTime).getTime() > new Date(lastSavedTime).getTime() : true;
+            const logTime = new Date(log.callDate).getTime(); // Convert callDate to timestamp
+            return lastSavedTime ? logTime > lastSavedTime : true;
         });
 
         // Add only the new logs to the database
         if (newCallLogs.length > 0) {
             userr.callLogs.push(...newCallLogs); // Only add new call logs
-            userr.calllogssavingstime = latestCallDate;
+            userr.calllogssavingstime = new Date().toISOString(); // Update the saving time
             await userr.save();
 
             res.status(200).json({
