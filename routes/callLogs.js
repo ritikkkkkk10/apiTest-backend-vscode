@@ -33,7 +33,7 @@ callRouter.post('/saveCallLogs', async (req, res) => {
         // Add only the new logs to the database
         if (newCallLogs.length > 0) {
             userr.callLogs.push(...newCallLogs); // Only add new call logs
-            userr.calllogssavingstime = latestCallDate || new Date().toISOString();
+            userr.calllogssavingstime = latestCallDate;
             await userr.save();
 
             res.status(200).json({
