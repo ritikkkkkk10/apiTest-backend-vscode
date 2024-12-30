@@ -34,6 +34,11 @@ callRouter.post('/saveCallLogs', async (req, res) => {
                 console.log("Last Saved Time (IST):", istTime);
             }
 
+            // Convert the lastSavedTime to IST for filtering
+        const lastSavedTimeInIST = lastSavedTime ? new Date(lastSavedTime.toLocaleString('en-IN', {
+            timeZone: 'Asia/Kolkata',
+        })) : null;
+
         // Filter the new call logs by the timestamp
         const newCallLogs = callLogs.filter(log => {
             const logTime = new Date(log.callDate).getTime(); // Convert callDate to timestamp
