@@ -24,25 +24,17 @@ callRouter.post('/saveCallLogs', async (req, res) => {
             ? new Date(userr.calllogssavingstime)
             : null;
 
-            if (lastSavedTime) {
-                // Convert to IST (UTC +5:30) by using toLocaleString
-                const istTime = lastSavedTime.toLocaleString('en-IN', {
-                    timeZone: 'Asia/Kolkata', // Set the time zone to Indian Standard Time
-                });
-    
-                // Log the converted IST time
-                console.log("Last Saved Time (IST):", istTime);
-            }
+        // Log the UTC last saved time
+        if (lastSavedTime) {
+            console.log("Last Saved Time (UTC):", lastSavedTime.toISOString());
+        }
 
-            // Convert the lastSavedTime to IST for filtering
-        const lastSavedTimeInIST = lastSavedTime ? new Date(lastSavedTime.toLocaleString('en-IN', {
-            timeZone: 'Asia/Kolkata',
-        })) : null;
-
-        // Filter the new call logs by the timestamp
+        // Filter the new call logs by the timestamp in UTC
         const newCallLogs = callLogs.filter(log => {
-            const logTime = new Date(log.callDate).getTime(); // Convert callDate to timestamp
-            return lastSavedTimeInIST ? logTime > lastSavedTimeInIST.getTime() : true;
+            const logTime = new Date(log.callDate).getTime(); // Convert callDate to timestamp (UTC)
+            const lastSavedTimeUTC = lastSavedTime ? lastSavedTime.getTime() : 0;
+            // Compare the log time (UTC) with lastSavedTime (UTC)
+            return logTime > lastSavedTimeUTC;
         });
 
         // Add only the new logs to the database
