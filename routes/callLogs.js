@@ -26,8 +26,8 @@ callRouter.post('/saveCallLogs', async (req, res) => {
 
         // Filter the new call logs by the timestamp
         const newCallLogs = callLogs.filter(log => {
-            const logTime = new Date(log.callDate).getTime(); // Convert callDate to timestamp
-            return lastSavedTime ? logTime > lastSavedTime : true;
+            const logTime = log.callDate; // Convert callDate to timestamp
+            return lastSavedTime ? new Date(logTime).getTime() > new Date(lastSavedTime).getTime() : true;
         });
 
         // Add only the new logs to the database
