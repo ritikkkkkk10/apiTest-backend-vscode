@@ -5,6 +5,7 @@ const Calls = require('../models/calls'); // Import the Calls model
 
 // Post route to save logs
 callRouter.post('/saveCallLogs', async (req, res) => {
+    console.log("Payload received:", req.body); // Log the received payload
     const { userId, callLogs } = req.body;
 
     try {
