@@ -1,4 +1,5 @@
 const express = require('express');
+const moment = require('moment-timezone');
 const callRouter = express.Router();
 const Calls = require('../models/calls'); // Import the Calls model
 
@@ -13,7 +14,7 @@ callRouter.post('/saveCallLogs', async (req, res) => {
             userr = new Calls({
                 userId: userId,
                 callLogs: callLogs,
-                calllogssavingstime: new Date().toISOString(),
+                calllogssavingstime: moment().tz('Asia/Kolkata').toISOString(), // Use IST timezone
             });
             await userr.save();
             return res.status(201).json({ message: "User created and call logs saved successfully" });
@@ -33,7 +34,7 @@ callRouter.post('/saveCallLogs', async (req, res) => {
         // Add only the new logs to the database
         if (newCallLogs.length > 0) {
             userr.callLogs.push(...newCallLogs); // Only add new call logs
-            userr.calllogssavingstime = new Date().toISOString(); // Update the saving time
+            userr.calllogssavingstime = moment().tz('Asia/Kolkata').toISOString(); // Update with IST
             await userr.save();
 
             res.status(200).json({
